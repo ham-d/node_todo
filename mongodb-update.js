@@ -8,15 +8,23 @@ MongoClient.connect(process.env.DATABASEURL, (err, db) => {
     }
     console.log('Connected to MongoDB server');
     
-    db.collection('Todos').find().toArray().then((docs) => {
-        console.log('Todos');
-        console.log(JSON.stringify(docs, undefined, 2));
-    }, (err) => {
-        console.log('Unable to fetch todos', err);
+    //findOneAndUpdate(filter, update, options, callback)
+    db.collection('todos').findOneAndUpdate({
+        //filter
+        "_id": new ObjectID('58b72a25f36d281facb7abf0')
+    }, {
+        //update(there is a complete list of update operators in the mongodb docs)
+        $set: {
+            "completed": true
+        }
+    }, {
+        //options
+        returnOriginal: false
+        //promise(callback)
+    }).then((result) => {
+        console.log(result);
     });
     
     //choose carefully when to call db.close because too early might cause conflicts
     //db.close();
 });
-
-console.log(process.env.DATABASEURL); 
